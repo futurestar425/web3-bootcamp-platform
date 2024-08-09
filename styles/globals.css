@@ -41,6 +41,9 @@ body {
   line-height: 1.6;
   font-size: 18px;
   scroll-behavior: smooth;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 body {
@@ -51,6 +54,7 @@ body {
   background-attachment: fixed;
   min-height: 100vh;
   transition: background-image 0.3s ease;
+  flex: 1;
 }
 
 * {
@@ -118,10 +122,6 @@ pre {
   z-index: 10;
 }
 
-:root {
-  --background-image: url('/light-background.png');
-}
-
 /* Tema claro */
 .light-theme {
   --background-image: url('/light-background.png');
@@ -130,4 +130,16 @@ pre {
 /* Tema escuro */
 .dark-theme {
   --background-image: url('/dark-background.png');
+}
+
+.icon {
+  transition: filter 0.3s ease;
+}
+
+.light-icon {
+  filter: brightness(0) saturate(100%);
+}
+
+.dark-icon {
+  filter: brightness(0) saturate(100%) invert(100%);
 }

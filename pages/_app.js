@@ -9,7 +9,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/router'
 import '../i18n'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { mixpanel } from '../lib/utils/mixpanel'
 import Footer from '../components/Footer/index'
 import '../lib/globals.js'
@@ -26,6 +26,11 @@ function MyApp({ Component, pageProps }) {
   const supportedChainIds = [80001, 4, 137, 1, 250, 43114]
   const router = useRouter()
   const { i18n, t } = useTranslation()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -59,36 +64,32 @@ function MyApp({ Component, pageProps }) {
           light: 'light-theme',
           dark: 'dark-theme',
         }}
+        enableSystem={true}
+        disableTransitionOnChange
       >
-        <NextUIProvider>
-          <AuthProvider>
-            <ThirdwebProvider
-              supportedChainIds={supportedChainIds}
-              desiredChainId={ChainId.Mainnet}
-              connectors={connectors}
-            >
-              <SessionProvider session={pageProps.session}>
-                <Head>
-                  <title>{t('createFirstProject')}</title>
-                  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                  <link rel="icon" href="/assets/img/w3d-logo-symbol-ac.svg" />
-                </Head>
-                <div
-                  style={{
-                    zIndex: 100,
-                    width: '100%',
-                    position: 'relative',
-                  }}
-                >
+        {mounted && (
+          <NextUIProvider>
+            <AuthProvider>
+              <ThirdwebProvider
+                supportedChainIds={supportedChainIds}
+                desiredChainId={ChainId.Mainnet}
+                connectors={connectors}
+              >
+                <SessionProvider session={pageProps.session}>
+                  <Head>
+                    <title>{t('createFirstProject')}</title>
+                    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                    <link rel="icon" href="/assets/img/w3d-logo-symbol-ac.svg" />
+                  </Head>
                   <NavbarComponent />
                   <Component {...pageProps} />
                   <Footer />
                   <ToastContainer />
-                </div>
-              </SessionProvider>
-            </ThirdwebProvider>
-          </AuthProvider>
-        </NextUIProvider>
+                </SessionProvider>
+              </ThirdwebProvider>
+            </AuthProvider>
+          </NextUIProvider>
+        )}
       </NextThemesProvider>
     </SSRProvider>
   )
