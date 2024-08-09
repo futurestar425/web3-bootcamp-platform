@@ -7,14 +7,13 @@ import { ThirdwebProvider, ChainId } from '@thirdweb-dev/react'
 import 'regenerator-runtime/runtime'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
-import "../i18n" 
+import '../i18n'
 import React, { useEffect } from 'react'
 import { mixpanel } from '../lib/utils/mixpanel'
 import Footer from '../components/Footer/index'
 import '../lib/globals.js'
-import { NextUIProvider, createTheme } from '@nextui-org/react'
+import { NextUIProvider } from '@nextui-org/react'
 import NavbarComponent from '../components/Navbar/index'
 import { useTranslation } from 'react-i18next'
 import { SSRProvider } from '@react-aria/ssr'
@@ -25,9 +24,7 @@ export const event = (event_name, props) => {
 
 function MyApp({ Component, pageProps }) {
   const supportedChainIds = [80001, 4, 137, 1, 250, 43114]
-
   const router = useRouter()
-
   const { i18n, t } = useTranslation()
 
   useEffect(() => {
@@ -37,7 +34,7 @@ function MyApp({ Component, pageProps }) {
         i18n.changeLanguage(lang)
       }
     }
-  }, [router.query.lang]) // Depend on router.query.lang to react to changes
+  }, [router.query.lang])
 
   useEffect(() => {
     const handleRouteChange = (url) => {
@@ -52,28 +49,15 @@ function MyApp({ Component, pageProps }) {
   const connectors = {
     injected: {},
   }
-  const cookieText =
-    'Ao clicar em aceitar, você consente com o uso dos cookies que você proveu em nosso website, para fornecer uma melhor experiência de usuário.'
 
-  const lightTheme = createTheme({
-    type: 'light',
-    theme: {
-      colors: {
-        background: 'white',
-      },
-    },
-  })
-  const darkTheme = createTheme({
-    type: 'dark',
-  })
   return (
     <SSRProvider>
       <NextThemesProvider
-        defaultTheme="dark"
+        defaultTheme="system"
         attribute="class"
         value={{
-          light: lightTheme.className,
-          dark: darkTheme.className,
+          light: 'light-theme',
+          dark: 'dark-theme',
         }}
       >
         <NextUIProvider>
@@ -89,11 +73,18 @@ function MyApp({ Component, pageProps }) {
                   <meta name="viewport" content="initial-scale=1.0, width=device-width" />
                   <link rel="icon" href="/assets/img/w3d-logo-symbol-ac.svg" />
                 </Head>
-                <NavbarComponent />
-                <div className="relative z-10"></div>
-                <Component {...pageProps} />
-                <Footer />
-                <ToastContainer />
+                <div
+                  style={{
+                    zIndex: 100,
+                    width: '100%',
+                    position: 'relative',
+                  }}
+                >
+                  <NavbarComponent />
+                  <Component {...pageProps} />
+                  <Footer />
+                  <ToastContainer />
+                </div>
               </SessionProvider>
             </ThirdwebProvider>
           </AuthProvider>
